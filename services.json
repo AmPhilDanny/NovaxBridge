@@ -1,0 +1,475 @@
+[
+  {
+    "service": {
+      "autoDeploy": "yes",
+      "autoDeployTrigger": "commit",
+      "branch": "master",
+      "createdAt": "2026-07-13T12:43:00.279952Z",
+      "dashboardUrl": "https://dashboard.render.com/static/srv-d9adqkok1i2s73fg445g",
+      "environmentId": "evm-d9a0u3i8qa3s73d3vaj0",
+      "id": "srv-d9adqkok1i2s73fg445g",
+      "name": "NovaxBridge",
+      "notifyOnFail": "default",
+      "ownerId": "tea-d93medtckfvc738puai0",
+      "repo": "https://github.com/AmPhilDanny/NovaxStuduo",
+      "rootDir": "Skillbridge",
+      "serviceDetails": {
+        "buildCommand": "npm install \u0026\u0026 npm run build",
+        "buildPlan": "starter",
+        "ipAllowList": [
+          {
+            "cidrBlock": "0.0.0.0/0",
+            "description": "everywhere"
+          }
+        ],
+        "previews": {
+          "generation": "off"
+        },
+        "publishPath": "dist",
+        "pullRequestPreviewsEnabled": "no",
+        "url": "https://novaxbridge.onrender.com"
+      },
+      "slug": "novaxbridge",
+      "suspended": "not_suspended",
+      "suspenders": [],
+      "type": "static_site",
+      "updatedAt": "2026-07-16T12:57:41.81687Z"
+    },
+    "project": {
+      "createdAt": "2026-07-12T22:02:54.218194Z",
+      "environmentIds": [
+        "evm-d9a0u3i8qa3s73d3vaj0"
+      ],
+      "id": "prj-d9a0u3i8qa3s73d3vaig",
+      "name": "NovaxShowCase",
+      "owner": {
+        "email": "philipdaniel.philip@gmail.com",
+        "id": "tea-d93medtckfvc738puai0",
+        "name": "My Workspace",
+        "type": "team"
+      },
+      "updatedAt": "2026-07-12T22:02:54.218194Z"
+    },
+    "environment": {
+      "databasesIds": null,
+      "envGroupIds": null,
+      "id": "evm-d9a0u3i8qa3s73d3vaj0",
+      "ipAllowList": [
+        {
+          "cidrBlock": "0.0.0.0/0",
+          "description": "everywhere"
+        }
+      ],
+      "name": "Production",
+      "networkIsolationEnabled": false,
+      "projectId": "prj-d9a0u3i8qa3s73d3vaig",
+      "protectedStatus": "unprotected",
+      "redisIds": null,
+      "serviceIds": [
+        "srv-d9aeeu67r5hc73cj7s20",
+        "srv-d9adalreo5us739pks2g",
+        "srv-d9adqkok1i2s73fg445g"
+      ]
+    }
+  },
+  {
+    "service": {
+      "autoDeploy": "yes",
+      "autoDeployTrigger": "commit",
+      "branch": "master",
+      "createdAt": "2026-07-13T13:26:16.424313Z",
+      "dashboardUrl": "https://dashboard.render.com/static/srv-d9aeeu67r5hc73cj7s20",
+      "environmentId": "evm-d9a0u3i8qa3s73d3vaj0",
+      "id": "srv-d9aeeu67r5hc73cj7s20",
+      "name": "NovaxBridgeAdmin",
+      "notifyOnFail": "default",
+      "ownerId": "tea-d93medtckfvc738puai0",
+      "repo": "https://github.com/AmPhilDanny/NovaxStuduo",
+      "rootDir": "admin",
+      "serviceDetails": {
+        "buildCommand": "npm install; npm run build",
+        "buildPlan": "starter",
+        "ipAllowList": [
+          {
+            "cidrBlock": "0.0.0.0/0",
+            "description": "everywhere"
+          }
+        ],
+        "previews": {
+          "generation": "off"
+        },
+        "publishPath": "dist",
+        "pullRequestPreviewsEnabled": "no",
+        "url": "https://novaxbridgeadmin.onrender.com"
+      },
+      "slug": "novaxbridgeadmin",
+      "suspended": "not_suspended",
+      "suspenders": [],
+      "type": "static_site",
+      "updatedAt": "2026-07-17T21:36:04.024971Z"
+    },
+    "project": {
+      "createdAt": "2026-07-12T22:02:54.218194Z",
+      "environmentIds": [
+        "evm-d9a0u3i8qa3s73d3vaj0"
+      ],
+      "id": "prj-d9a0u3i8qa3s73d3vaig",
+      "name": "NovaxShowCase",
+      "owner": {
+        "email": "philipdaniel.philip@gmail.com",
+        "id": "tea-d93medtckfvc738puai0",
+        "name": "My Workspace",
+        "type": "team"
+      },
+      "updatedAt": "2026-07-12T22:02:54.218194Z"
+    },
+    "environment": {
+      "databasesIds": null,
+      "envGroupIds": null,
+      "id": "evm-d9a0u3i8qa3s73d3vaj0",
+      "ipAllowList": [
+        {
+          "cidrBlock": "0.0.0.0/0",
+          "description": "everywhere"
+        }
+      ],
+      "name": "Production",
+      "networkIsolationEnabled": false,
+      "projectId": "prj-d9a0u3i8qa3s73d3vaig",
+      "protectedStatus": "unprotected",
+      "redisIds": null,
+      "serviceIds": [
+        "srv-d9aeeu67r5hc73cj7s20",
+        "srv-d9adalreo5us739pks2g",
+        "srv-d9adqkok1i2s73fg445g"
+      ]
+    }
+  },
+  {
+    "service": {
+      "autoDeploy": "yes",
+      "autoDeployTrigger": "commit",
+      "branch": "master",
+      "createdAt": "2026-07-13T12:08:55.750825Z",
+      "dashboardUrl": "https://dashboard.render.com/web/srv-d9adalreo5us739pks2g",
+      "environmentId": "evm-d9a0u3i8qa3s73d3vaj0",
+      "id": "srv-d9adalreo5us739pks2g",
+      "name": "NovaxBridgeServer",
+      "notifyOnFail": "default",
+      "ownerId": "tea-d93medtckfvc738puai0",
+      "repo": "https://github.com/AmPhilDanny/NovaxStuduo",
+      "rootDir": "server",
+      "serviceDetails": {
+        "buildPlan": "starter",
+        "cache": {
+          "profile": "no-cache"
+        },
+        "env": "node",
+        "envSpecificDetails": {
+          "buildCommand": "npm install \u0026\u0026 npm run build",
+          "startCommand": "npm start"
+        },
+        "healthCheckPath": "",
+        "ipAllowList": [
+          {
+            "cidrBlock": "0.0.0.0/0",
+            "description": "everywhere"
+          }
+        ],
+        "maintenanceMode": {
+          "enabled": false,
+          "uri": ""
+        },
+        "numInstances": 1,
+        "openPorts": null,
+        "plan": "free",
+        "previews": {
+          "generation": "off"
+        },
+        "pullRequestPreviewsEnabled": "no",
+        "region": "frankfurt",
+        "runtime": "node",
+        "sshAddress": "srv-d9adalreo5us739pks2g@ssh.frankfurt.render.com",
+        "url": "https://novaxstudioshowcase.onrender.com"
+      },
+      "slug": "novaxstudioshowcase",
+      "suspended": "not_suspended",
+      "suspenders": [],
+      "type": "web_service",
+      "updatedAt": "2026-07-17T20:41:50.339269Z"
+    },
+    "project": {
+      "createdAt": "2026-07-12T22:02:54.218194Z",
+      "environmentIds": [
+        "evm-d9a0u3i8qa3s73d3vaj0"
+      ],
+      "id": "prj-d9a0u3i8qa3s73d3vaig",
+      "name": "NovaxShowCase",
+      "owner": {
+        "email": "philipdaniel.philip@gmail.com",
+        "id": "tea-d93medtckfvc738puai0",
+        "name": "My Workspace",
+        "type": "team"
+      },
+      "updatedAt": "2026-07-12T22:02:54.218194Z"
+    },
+    "environment": {
+      "databasesIds": null,
+      "envGroupIds": null,
+      "id": "evm-d9a0u3i8qa3s73d3vaj0",
+      "ipAllowList": [
+        {
+          "cidrBlock": "0.0.0.0/0",
+          "description": "everywhere"
+        }
+      ],
+      "name": "Production",
+      "networkIsolationEnabled": false,
+      "projectId": "prj-d9a0u3i8qa3s73d3vaig",
+      "protectedStatus": "unprotected",
+      "redisIds": null,
+      "serviceIds": [
+        "srv-d9aeeu67r5hc73cj7s20",
+        "srv-d9adalreo5us739pks2g",
+        "srv-d9adqkok1i2s73fg445g"
+      ]
+    }
+  },
+  {
+    "service": {
+      "autoDeploy": "yes",
+      "autoDeployTrigger": "commit",
+      "branch": "main",
+      "createdAt": "2026-07-03T21:55:26.510746Z",
+      "dashboardUrl": "https://dashboard.render.com/static/srv-d942vja8qa3s73bo4oig",
+      "environmentId": "evm-d93mj3svikkc73ak65cg",
+      "id": "srv-d942vja8qa3s73bo4oig",
+      "name": "ogbenjuwa-beacon",
+      "notifyOnFail": "default",
+      "ownerId": "tea-d93medtckfvc738puai0",
+      "repo": "https://github.com/AmPhilDanny/Ogbenjuwa-beacon-network",
+      "rootDir": "ogbenjuwa-beacon-network",
+      "serviceDetails": {
+        "buildCommand": "npm install \u0026\u0026 npm run build",
+        "buildPlan": "starter",
+        "ipAllowList": [
+          {
+            "cidrBlock": "0.0.0.0/0",
+            "description": "everywhere"
+          }
+        ],
+        "previews": {
+          "generation": "off"
+        },
+        "publishPath": "dist",
+        "pullRequestPreviewsEnabled": "no",
+        "url": "https://ogbenjuwa-beacon.onrender.com"
+      },
+      "slug": "ogbenjuwa-beacon",
+      "suspended": "not_suspended",
+      "suspenders": [],
+      "type": "static_site",
+      "updatedAt": "2026-07-16T22:04:34.89296Z"
+    },
+    "project": {
+      "createdAt": "2026-07-03T07:49:35.276931Z",
+      "environmentIds": [
+        "evm-d93mj3svikkc73ak65cg"
+      ],
+      "id": "prj-d93mj3svikkc73ak65c0",
+      "name": "My project",
+      "owner": {
+        "email": "philipdaniel.philip@gmail.com",
+        "id": "tea-d93medtckfvc738puai0",
+        "name": "My Workspace",
+        "type": "team"
+      },
+      "updatedAt": "2026-07-03T07:49:35.276931Z"
+    },
+    "environment": {
+      "databasesIds": null,
+      "envGroupIds": null,
+      "id": "evm-d93mj3svikkc73ak65cg",
+      "ipAllowList": [
+        {
+          "cidrBlock": "0.0.0.0/0",
+          "description": "everywhere"
+        }
+      ],
+      "name": "Production",
+      "networkIsolationEnabled": false,
+      "projectId": "prj-d93mj3svikkc73ak65c0",
+      "protectedStatus": "unprotected",
+      "redisIds": null,
+      "serviceIds": [
+        "srv-d94376laeets73etv46g",
+        "srv-d942vja8qa3s73bo4oig",
+        "srv-d942q7mq1p3s73am8250"
+      ]
+    }
+  },
+  {
+    "service": {
+      "autoDeploy": "yes",
+      "autoDeployTrigger": "commit",
+      "branch": "main",
+      "createdAt": "2026-07-03T22:11:38.844867Z",
+      "dashboardUrl": "https://dashboard.render.com/static/srv-d94376laeets73etv46g",
+      "environmentId": "evm-d93mj3svikkc73ak65cg",
+      "id": "srv-d94376laeets73etv46g",
+      "name": "ogbenjuwa-userapps",
+      "notifyOnFail": "default",
+      "ownerId": "tea-d93medtckfvc738puai0",
+      "repo": "https://github.com/AmPhilDanny/Ogbenjuwa-beacon-network",
+      "rootDir": "user-apps",
+      "serviceDetails": {
+        "buildCommand": "npm install \u0026\u0026 npm run build",
+        "buildPlan": "starter",
+        "ipAllowList": [
+          {
+            "cidrBlock": "0.0.0.0/0",
+            "description": "everywhere"
+          }
+        ],
+        "previews": {
+          "generation": "off"
+        },
+        "publishPath": "dist",
+        "pullRequestPreviewsEnabled": "no",
+        "url": "https://ogbenjuwa-userapps.onrender.com"
+      },
+      "slug": "ogbenjuwa-userapps",
+      "suspended": "not_suspended",
+      "suspenders": [],
+      "type": "static_site",
+      "updatedAt": "2026-07-17T20:04:51.051915Z"
+    },
+    "project": {
+      "createdAt": "2026-07-03T07:49:35.276931Z",
+      "environmentIds": [
+        "evm-d93mj3svikkc73ak65cg"
+      ],
+      "id": "prj-d93mj3svikkc73ak65c0",
+      "name": "My project",
+      "owner": {
+        "email": "philipdaniel.philip@gmail.com",
+        "id": "tea-d93medtckfvc738puai0",
+        "name": "My Workspace",
+        "type": "team"
+      },
+      "updatedAt": "2026-07-03T07:49:35.276931Z"
+    },
+    "environment": {
+      "databasesIds": null,
+      "envGroupIds": null,
+      "id": "evm-d93mj3svikkc73ak65cg",
+      "ipAllowList": [
+        {
+          "cidrBlock": "0.0.0.0/0",
+          "description": "everywhere"
+        }
+      ],
+      "name": "Production",
+      "networkIsolationEnabled": false,
+      "projectId": "prj-d93mj3svikkc73ak65c0",
+      "protectedStatus": "unprotected",
+      "redisIds": null,
+      "serviceIds": [
+        "srv-d94376laeets73etv46g",
+        "srv-d942vja8qa3s73bo4oig",
+        "srv-d942q7mq1p3s73am8250"
+      ]
+    }
+  },
+  {
+    "service": {
+      "autoDeploy": "yes",
+      "autoDeployTrigger": "commit",
+      "branch": "main",
+      "createdAt": "2026-07-03T21:43:59.197213Z",
+      "dashboardUrl": "https://dashboard.render.com/web/srv-d942q7mq1p3s73am8250",
+      "environmentId": "evm-d93mj3svikkc73ak65cg",
+      "id": "srv-d942q7mq1p3s73am8250",
+      "name": "ogbenjuwa-api",
+      "notifyOnFail": "default",
+      "ownerId": "tea-d93medtckfvc738puai0",
+      "repo": "https://github.com/AmPhilDanny/Ogbenjuwa-beacon-network",
+      "rootDir": "central-command",
+      "serviceDetails": {
+        "buildPlan": "starter",
+        "cache": {
+          "profile": "no-cache"
+        },
+        "env": "docker",
+        "envSpecificDetails": {
+          "dockerCommand": "",
+          "dockerContext": ".",
+          "dockerfilePath": "./Dockerfile"
+        },
+        "healthCheckPath": "",
+        "ipAllowList": [
+          {
+            "cidrBlock": "0.0.0.0/0",
+            "description": "everywhere"
+          }
+        ],
+        "maintenanceMode": {
+          "enabled": false,
+          "uri": ""
+        },
+        "numInstances": 1,
+        "openPorts": null,
+        "plan": "free",
+        "previews": {
+          "generation": "off"
+        },
+        "pullRequestPreviewsEnabled": "no",
+        "region": "frankfurt",
+        "runtime": "docker",
+        "sshAddress": "srv-d942q7mq1p3s73am8250@ssh.frankfurt.render.com",
+        "url": "https://ogbenjuwa-api.onrender.com"
+      },
+      "slug": "ogbenjuwa-api",
+      "suspended": "not_suspended",
+      "suspenders": [],
+      "type": "web_service",
+      "updatedAt": "2026-07-16T22:25:02.813669Z"
+    },
+    "project": {
+      "createdAt": "2026-07-03T07:49:35.276931Z",
+      "environmentIds": [
+        "evm-d93mj3svikkc73ak65cg"
+      ],
+      "id": "prj-d93mj3svikkc73ak65c0",
+      "name": "My project",
+      "owner": {
+        "email": "philipdaniel.philip@gmail.com",
+        "id": "tea-d93medtckfvc738puai0",
+        "name": "My Workspace",
+        "type": "team"
+      },
+      "updatedAt": "2026-07-03T07:49:35.276931Z"
+    },
+    "environment": {
+      "databasesIds": null,
+      "envGroupIds": null,
+      "id": "evm-d93mj3svikkc73ak65cg",
+      "ipAllowList": [
+        {
+          "cidrBlock": "0.0.0.0/0",
+          "description": "everywhere"
+        }
+      ],
+      "name": "Production",
+      "networkIsolationEnabled": false,
+      "projectId": "prj-d93mj3svikkc73ak65c0",
+      "protectedStatus": "unprotected",
+      "redisIds": null,
+      "serviceIds": [
+        "srv-d94376laeets73etv46g",
+        "srv-d942vja8qa3s73bo4oig",
+        "srv-d942q7mq1p3s73am8250"
+      ]
+    }
+  }
+]

@@ -1,0 +1,97 @@
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, CreditCard, Banknote, AlertCircle, ExternalLink } from 'lucide-react';
+import { initializePayment } from '@/lib/marketplace';
+import { toast } from 'sonner';
+
+interface PaymentCheckoutModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  orderId: string;
+  amount: number;
+  currency: string;
+  onPaymentInitiated?: () => void;
+}
+
+export default function PaymentCheckoutModal({
+  open, onOpenChange, orderId, amount, currency, onPaymentInitiated,
+}: PaymentCheckoutModalProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handlePayWithGateway = async (gateway: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await initializePayment(orderId, gateway);
+      window.open(result.authorization_url, '_blank');
+      toast.success('Payment page opened in a new tab');
+      onPaymentInitiated?.();
+      onOpenChange(false);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Payment failed';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Checkout</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="text-center p-4 bg-muted rounded-lg">
+            <p className="text-sm text-muted-foreground">Total Amount</p>
+            <p className="text-3xl font-bold">{currency} {amount?.toLocaleString()}</p>
+          </div>
+
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="w-4 h-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Choose payment method</p>
+            <Button
+              variant="outline"
+              className="w-full justify-start gap-3 h-14"
+              onClick={() => handlePayWithGateway('paystack')}
+              disabled={loading}
+            >
+              <CreditCard className="w-5 h-5 text-purple-600" />
+              <div className="text-left">
+                <p className="text-sm font-medium">Pay with Card</p>
+                <p className="text-xs text-muted-foreground">Visa, Mastercard, Verve</p>
+              </div>
+              {loading && <Loader2 className="w-4 h-4 animate-spin ml-auto" />}
+              {!loading && <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />}
+            </Button>
+
+            <Button
+              variant="outline"
+              className="w-full justify-start gap-3 h-14"
+              onClick={() => handlePayWithGateway('flutterwave')}
+              disabled={loading}
+            >
+              <Banknote className="w-5 h-5 text-blue-600" />
+              <div className="text-left">
+                <p className="text-sm font-medium">Mobile Money / Bank</p>
+                <p className="text-xs text-muted-foreground">MPesa, Airtel Money, Bank Transfer</p>
+              </div>
+              {loading && <Loader2 className="w-4 h-4 animate-spin ml-auto" />}
+              {!loading && <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -1,0 +1,142 @@
+import { useState, useEffect, useRef } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Loader2, Upload, Banknote, CheckCircle2 } from 'lucide-react';
+import { getOfflinePaymentConfig, initiateManualPayment, uploadPaymentScreenshot } from '@/lib/marketplace';
+import type { OfflinePaymentConfig } from '@/lib/marketplace';
+import { toast } from 'sonner';
+
+interface ManualPaymentFormProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  orderId: string;
+  onSubmitted?: () => void;
+}
+
+export default function ManualPaymentForm({ open, onOpenChange, orderId, onSubmitted }: ManualPaymentFormProps) {
+  const [config, setConfig] = useState<OfflinePaymentConfig | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [notes, setNotes] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      setLoading(true);
+      getOfflinePaymentConfig()
+        .then(setConfig)
+        .catch(() => {})
+        .finally(() => setLoading(false));
+      setFile(null);
+      setNotes('');
+      setPreview(null);
+    }
+  }, [open]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    const reader = new FileReader();
+    reader.onload = () => setPreview(reader.result as string);
+    reader.readAsDataURL(f);
+  };
+
+  const handleSubmit = async () => {
+    if (!file) {
+      toast.error('Please upload a payment screenshot');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const url = await uploadPaymentScreenshot(file);
+      await initiateManualPayment(orderId, url, notes.trim() || undefined);
+      toast.success('Payment proof submitted! Awaiting verification.');
+      onSubmitted?.();
+      onOpenChange(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Submission failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Bank Transfer Payment</DialogTitle>
+        </DialogHeader>
+
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : config ? (
+          <div className="space-y-4">
+            <div className="p-4 bg-muted rounded-lg space-y-1">
+              <p className="text-sm font-medium">Bank Details</p>
+              <p className="text-sm text-muted-foreground">{config.bank_name}</p>
+              <p className="text-sm text-muted-foreground">Account: {config.account_number}</p>
+              <p className="text-sm text-muted-foreground">Name: {config.account_name}</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Upload Payment Screenshot</Label>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-2"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Upload className="w-4 h-4" />
+                {file ? file.name : 'Choose screenshot'}
+              </Button>
+              {preview && (
+                <img src={preview} alt="Preview" className="max-h-40 rounded border object-contain" />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Notes (optional)</Label>
+              <Textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Depositor name, date, etc."
+                rows={2}
+              />
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              disabled={submitting || !file}
+              className="w-full gap-1.5"
+            >
+              {submitting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4" />
+              )}
+              {submitting ? 'Submitting...' : 'Submit Payment Proof'}
+            </Button>
+          </div>
+        ) : (
+          <div className="text-center py-6 text-sm text-muted-foreground">
+            <Banknote className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p>Bank transfer is not available for this platform yet.</p>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}

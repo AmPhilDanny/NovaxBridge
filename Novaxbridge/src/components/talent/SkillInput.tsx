@@ -1,0 +1,68 @@
+import { useState, KeyboardEvent } from 'react';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { X } from 'lucide-react';
+
+interface SkillInputProps {
+  value: string[];
+  onChange: (skills: string[]) => void;
+  placeholder?: string;
+}
+
+/** Type a skill, press Enter or comma to add it as a tag. */
+export function SkillInput({ value, onChange, placeholder = 'e.g. React, Figma, Solidity...' }: SkillInputProps) {
+  const [draft, setDraft] = useState('');
+
+  const addSkill = (raw: string) => {
+    const skill = raw.trim();
+    if (!skill) return;
+    if (value.some((s) => s.toLowerCase() === skill.toLowerCase())) {
+      setDraft('');
+      return;
+    }
+    onChange([...value, skill]);
+    setDraft('');
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addSkill(draft);
+    } else if (e.key === 'Backspace' && !draft && value.length > 0) {
+      onChange(value.slice(0, -1));
+    }
+  };
+
+  const removeSkill = (skill: string) => {
+    onChange(value.filter((s) => s !== skill));
+  };
+
+  return (
+    <div className="space-y-2">
+      <Input
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={() => addSkill(draft)}
+        placeholder={placeholder}
+      />
+      {value.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {value.map((skill) => (
+            <Badge key={skill} variant="secondary" className="gap-1 pr-1">
+              {skill}
+              <button
+                type="button"
+                onClick={() => removeSkill(skill)}
+                className="ml-0.5 rounded-full hover:bg-black/10 p-0.5"
+                aria-label={`Remove ${skill}`}
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

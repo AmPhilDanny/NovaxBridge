@@ -1,0 +1,48 @@
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Loader2, HandCoins } from 'lucide-react';
+import { releaseEscrow } from '@/lib/marketplace';
+import { toast } from 'sonner';
+
+interface EscrowReleaseButtonProps {
+  orderId: string;
+  disabled?: boolean;
+  onReleased?: () => void;
+}
+
+export default function EscrowReleaseButton({ orderId, disabled, onReleased }: EscrowReleaseButtonProps) {
+  const [releasing, setReleasing] = useState(false);
+
+  const handleRelease = async () => {
+    setReleasing(true);
+    try {
+      const result = await releaseEscrow(orderId);
+      if (result.released) {
+        toast.success(`$${result.amount.toLocaleString()} released to your wallet (fee: $${result.fee.toLocaleString()})`);
+      } else {
+        toast.error('Funds already released');
+      }
+      onReleased?.();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Release failed');
+    } finally {
+      setReleasing(false);
+    }
+  };
+
+  return (
+    <Button
+      onClick={handleRelease}
+      disabled={disabled || releasing}
+      variant="default"
+      className="gap-1.5"
+    >
+      {releasing ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <HandCoins className="w-4 h-4" />
+      )}
+      {releasing ? 'Releasing...' : 'Release Payment'}
+    </Button>
+  );
+}

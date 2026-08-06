@@ -1,0 +1,144 @@
+import { useState, useRef, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Loader2, Search, MessageSquare, UserPlus } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { createConversation } from '@/lib/marketplace';
+import { toast } from 'sonner';
+
+interface UserResult {
+  id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: string | null;
+  headline: string | null;
+}
+
+interface NewMessageDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConversationCreated: (conversationId: string) => void;
+}
+
+export default function NewMessageDialog({ open, onOpenChange, onConversationCreated }: NewMessageDialogProps) {
+  const { user } = useAuth();
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<UserResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [creating, setCreating] = useState<string | null>(null);
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setQuery('');
+      setResults([]);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    if (query.trim().length < 2) {
+      setResults([]);
+      return;
+    }
+    searchTimer.current = setTimeout(() => searchUsers(), 300);
+    return () => { if (searchTimer.current) { clearTimeout(searchTimer.current); searchTimer.current = null; } };
+  }, [query]);
+
+  const searchUsers = async () => {
+    setLoading(true);
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url, role, headline')
+        .ilike('full_name', `%${query.trim()}%`)
+        .neq('id', user?.id || '')
+        .limit(10);
+      setResults((data || []) as UserResult[]);
+    } catch {
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelect = async (otherId: string) => {
+    setCreating(otherId);
+    try {
+      const conv = await createConversation(otherId);
+      onConversationCreated(conv.id);
+      onOpenChange(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to start conversation');
+    } finally {
+      setCreating(null);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <MessageSquare className="w-5 h-5" />
+            New Message
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search users by name..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="pl-9"
+            autoFocus
+          />
+        </div>
+
+        <div className="max-h-80 overflow-y-auto space-y-1 -mx-2 px-2">
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-5 h-5 animate-spin text-secondary" />
+            </div>
+          ) : query.trim().length >= 2 && results.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-8">No users found</p>
+          ) : query.trim().length < 2 ? (
+            <p className="text-sm text-muted-foreground text-center py-8">Type at least 2 characters to search</p>
+          ) : (
+            results.map((r) => {
+              const initials = r.full_name
+                ? r.full_name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
+                : '?';
+              return (
+                <button
+                  key={r.id}
+                  onClick={() => handleSelect(r.id)}
+                  disabled={creating === r.id}
+                  className="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors text-left disabled:opacity-60"
+                >
+                  <Avatar className="w-9 h-9 shrink-0">
+                    <AvatarImage src={r.avatar_url || undefined} />
+                    <AvatarFallback>{initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{r.full_name || 'Unknown'}</p>
+                    {r.headline && <p className="text-xs text-muted-foreground truncate">{r.headline}</p>}
+                  </div>
+                  {creating === r.id ? (
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                  ) : (
+                    <UserPlus className="w-4 h-4 text-secondary shrink-0" />
+                  )}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

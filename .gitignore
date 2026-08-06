@@ -1,0 +1,72 @@
+# ── Dependencies ──
+node_modules/
+node_modules_old_*/
+
+# ── Environment variables ──
+.env
+.env.local
+.env.production
+
+# ── Build output ──
+dist/
+build/
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Logs ──
+*.log
+npm-debug.log*
+build.log
+
+# ── Watch script artifact ──
+dala-internal-watch-build-errors.js
+
+# ── AI / Agent working directories ──
+.omo/
+.opencode/
+.codegraph/
+.playwright-mcp/
+
+# ── AI-generated scratch / temp files ──
+fix.txt
+FIX_CONSTRAINTS.sql
+_combined_migration.sql
+FULL_MIGRATION.sql
+
+# ── AI agent artifacts, archived plans, sprints ──
+archived/
+
+# ── Chat logs / session transcripts ──
+chat session.txt
+admin-console.log
+admin-err.log
+admin-out.log
+
+# ── TypeScript incremental build cache ──
+*.tsbuildinfo
+
+# ── Bun lockfile (project uses npm) ──
+bun.lock
+
+# ── Vite build timestamps / temp mjs ──
+*.timestamp-*.mjs
+*.mjs
+
+# ── Temp / generated files ──
+Sample.jpg
+SkillBridge_Africa_Boxed_Wireframe.txt
+TEST_ACCOUNTS.md
+
+# ── Supabase temp ──
+supabase/.temp/
+
+# ── Render / deployment ──
+.DS_Store

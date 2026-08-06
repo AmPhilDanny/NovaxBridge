@@ -1,0 +1,23 @@
+import { Badge } from '@/components/ui/badge';
+
+interface PaymentStatusBadgeProps {
+  status: string;
+}
+
+const STATUS_CFG: Record<string, { label: string; className: string }> = {
+  paid: { label: 'Paid', className: 'bg-green-100 text-green-700 border-green-200' },
+  unpaid: { label: 'Unpaid', className: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+  pending: { label: 'Pending', className: 'bg-blue-100 text-blue-700 border-blue-200' },
+  refunded: { label: 'Refunded', className: 'bg-purple-100 text-purple-700 border-purple-200' },
+  failed: { label: 'Failed', className: 'bg-red-100 text-red-600 border-red-200' },
+  partially_paid: { label: 'Partial', className: 'bg-orange-100 text-orange-700 border-orange-200' },
+};
+
+export default function PaymentStatusBadge({ status }: PaymentStatusBadgeProps) {
+  const cfg = STATUS_CFG[status] || { label: status, className: 'bg-gray-100 text-gray-600 border-gray-200' };
+  return (
+    <Badge variant="outline" className={cfg.className}>
+      {cfg.label}
+    </Badge>
+  );
+}

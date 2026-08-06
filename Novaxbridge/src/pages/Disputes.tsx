@@ -1,0 +1,108 @@
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, AlertCircle, ChevronRight, Clock } from 'lucide-react';
+import { getMyDisputes, DISPUTE_STATUS_CONFIG, type Dispute } from '@/lib/marketplace';
+
+export default function Disputes() {
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const orderFilter = searchParams.get('order');
+  const [disputes, setDisputes] = useState<Dispute[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+    getMyDisputes()
+      .then((data) => {
+        if (orderFilter) {
+          setDisputes(data.filter((d) => d.order_id === orderFilter));
+        } else {
+          setDisputes(data);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [user, orderFilter]);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen pt-24 pb-12 px-4 text-center">
+        <p className="text-muted-foreground">Please sign in to view your disputes.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen pt-24 pb-12 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-primary">Disputes</h1>
+            <p className="text-muted-foreground mt-1">Track and manage your disputes</p>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin text-secondary" />
+          </div>
+        ) : disputes.length === 0 ? (
+          <Card>
+            <CardContent className="py-16 text-center">
+              <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium mb-2">No disputes</h3>
+              <p className="text-muted-foreground text-sm">
+                {orderFilter
+                  ? 'No dispute has been raised for this order.'
+                  : 'You have no disputes. If you have an issue with an order, you can raise a dispute from the order detail page.'}
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {disputes.map((dispute) => {
+              const statusCfg = DISPUTE_STATUS_CONFIG[dispute.status] || { label: dispute.status, color: '' };
+              return (
+                <Link key={dispute.id} to={`/disputes/${dispute.id}`}>
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Badge className={statusCfg.color} variant="secondary">
+                              {statusCfg.label}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(dispute.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <h3 className="font-semibold text-foreground truncate">
+                            {dispute.reason}
+                          </h3>
+                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                            {dispute.description || 'No details provided.'}
+                          </p>
+                          {dispute.order && (
+                            <p className="text-xs text-secondary mt-2">
+                              Order: {dispute.order.title || dispute.order_id.slice(0, 8)}
+                            </p>
+                          )}
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0 mt-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

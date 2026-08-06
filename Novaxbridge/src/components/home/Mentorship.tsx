@@ -1,0 +1,97 @@
+import { motion } from 'framer-motion';
+import { Award, Briefcase, Users, Star } from 'lucide-react';
+
+export function Mentorship() {
+  const benefits = [
+    {
+      icon: <Award className="w-6 h-6" />,
+      title: "Direct Expert Access",
+      text: "Weekly 1-on-1 sessions with engineers from top global companies."
+    },
+    {
+      icon: <Briefcase className="w-6 h-6" />,
+      title: "Career Coaching",
+      text: "Mock interviews, resume reviews, and salary negotiation workshops."
+    },
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: "Project Guidance",
+      text: "Get feedback on your portfolio projects from industry veterans."
+    },
+    {
+      icon: <Star className="w-6 h-6" />,
+      title: "Alumni Network",
+      text: "Join a growing community of graduates supporting each other."
+    }
+  ];
+
+  return (
+    <section id="mentors" className="py-24 bg-background overflow-hidden">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">Guided by the Best in the Industry</h2>
+            <p className="text-lg text-muted-foreground mb-10">
+              We don't just teach code; we provide a bridge to the industry through experienced mentors who are currently working at companies like Microsoft, Meta, and Stripe.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {benefits.map((benefit, index) => (
+                <div key={index} className="flex gap-4">
+                  <div className="shrink-0 w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+                    {benefit.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-bold mb-1">{benefit.title}</h4>
+                    <p className="text-sm text-muted-foreground">{benefit.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="grid grid-cols-2 gap-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                viewport={{ once: true }}
+                className="space-y-4"
+              >
+                <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
+                  <div className="w-12 h-12 rounded-full bg-secondary/20 mb-4" />
+                  <p className="text-xs font-bold text-secondary mb-2 uppercase tracking-widest">Engineering</p>
+                  <h5 className="font-bold text-sm">Sr. Engineer @ AWS</h5>
+                </div>
+                <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/10">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 mb-4" />
+                  <p className="text-xs font-bold text-primary mb-2 uppercase tracking-widest">Design</p>
+                  <h5 className="font-bold text-sm">Product Lead @ Figma</h5>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                viewport={{ once: true }}
+                className="space-y-4 translate-y-8"
+              >
+                <div className="bg-accent/5 rounded-2xl p-6 border border-accent/10">
+                  <div className="w-12 h-12 rounded-full bg-secondary/20 mb-4" />
+                  <p className="text-xs font-bold text-accent mb-2 uppercase tracking-widest">Data</p>
+                  <h5 className="font-bold text-sm">Lead Analyst @ Uber</h5>
+                </div>
+                <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
+                  <div className="w-12 h-12 rounded-full bg-accent/20 mb-4" />
+                  <p className="text-xs font-bold text-secondary mb-2 uppercase tracking-widest">Cloud</p>
+                  <h5 className="font-bold text-sm">DevOps @ Microsoft</h5>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

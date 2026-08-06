@@ -1,0 +1,152 @@
+import { useState, useEffect } from 'react';
+import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Loader2 } from 'lucide-react';
+import {
+  getAvailabilitySlots,
+  getAvailabilityOverrides,
+  DAY_FULL_LABELS,
+  type AvailabilitySlot,
+  type AvailabilityOverride,
+} from '@/lib/marketplace';
+
+interface Props {
+  providerId: string;
+}
+
+export default function AvailabilityCalendar({ providerId }: Props) {
+  const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
+  const [overrides, setOverrides] = useState<AvailabilityOverride[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!providerId) return;
+    setLoading(true);
+    Promise.all([
+      getAvailabilitySlots(providerId),
+      getAvailabilityOverrides(providerId),
+    ])
+      .then(([s, o]) => {
+        setSlots(s);
+        setOverrides(o);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [providerId]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="w-5 h-5 animate-spin text-secondary" />
+      </div>
+    );
+  }
+
+  const slotMap: Record<number, AvailabilitySlot[]> = {};
+  for (let i = 0; i < 7; i++) slotMap[i] = [];
+  for (const s of slots) {
+    if (!slotMap[s.day_of_week]) slotMap[s.day_of_week] = [];
+    slotMap[s.day_of_week].push(s);
+  }
+
+  const formatTime = (t: string) => {
+    const [h, m] = t.split(':');
+    const hour = parseInt(h);
+    const ampm = hour >= 12 ? 'pm' : 'am';
+    const h12 = hour % 12 || 12;
+    return `${h12}:${m}${ampm}`;
+  };
+
+  const overrideDates = new Set(overrides.filter((o) => !o.is_available).map((o) => o.date));
+
+  const hasSlots = slots.length > 0;
+
+  if (!hasSlots && overrides.length === 0) {
+    return (
+      <Card>
+        <CardContent className="pt-6 text-center py-8">
+          <p className="text-muted-foreground text-sm">No availability info set yet.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {hasSlots && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Weekly schedule</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {Array.from({ length: 7 }, (_, day) => {
+                const daySlots = slotMap[day] || [];
+                return (
+                  <div key={day} className="border border-border rounded-lg p-3">
+                    <p className="text-sm font-medium text-foreground mb-1.5">{DAY_FULL_LABELS[day]}</p>
+                    {daySlots.length === 0 ? (
+                      <p className="text-xs text-muted-foreground">Unavailable</p>
+                    ) : (
+                      <div className="space-y-1">
+                        {daySlots.map((s) => (
+                          <Badge key={s.id} variant="secondary" className="text-xs font-normal">
+                            {formatTime(s.start_time)} – {formatTime(s.end_time)}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {overrides.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Upcoming exceptions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {overrides
+                .filter((o) => new Date(o.date) >= new Date())
+                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                .slice(0, 5)
+                .map((o) => (
+                  <div key={o.id} className="flex items-center justify-between text-sm py-1.5 border-b border-border last:border-0">
+                    <span className="text-foreground font-medium">
+                      {new Date(o.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                    </span>
+                    <Badge variant={o.is_available ? 'default' : 'destructive'} className="text-xs">
+                      {o.is_available ? `${formatTime(o.start_time!)} – ${formatTime(o.end_time!)}` : 'Unavailable'}
+                    </Badge>
+                  </div>
+                ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {hasSlots && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Calendar view</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Calendar
+              mode="single"
+              selected={undefined}
+              className="mx-auto"
+              modifiers={{ unavailable: (date) => overrideDates.has(date.toISOString().split('T')[0]) }}
+              modifiersClassNames={{ unavailable: 'opacity-30 bg-destructive/10 line-through' }}
+            />
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
